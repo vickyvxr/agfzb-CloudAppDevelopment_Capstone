@@ -27,7 +27,7 @@ DEBUG = True
 
 APPEND_SLASH = True
 
-ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = ["vmrFinalProject33sp.eu-gb.mybluemix.net", "vmrFinalProject33sp-back.eu-gb.mybluemix.net"]
 
 
 # Application definition
