@@ -27,7 +27,7 @@ DEBUG = True
 
 APPEND_SLASH = True
 
-ALLOWED_HOSTS = ["vmrFinalProject33sp.eu-gb.mybluemix.net", "vmrFinalProject33sp-back.eu-gb.mybluemix.net"]
+ALLOWED_HOSTS = ["localhost","vmrFinalProject33sp.eu-gb.mybluemix.net", "vmrFinalProject33sp-back.eu-gb.mybluemix.net"]
 
 
 # Application definition
@@ -57,7 +57,7 @@ ROOT_URLCONF = 'djangobackend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
