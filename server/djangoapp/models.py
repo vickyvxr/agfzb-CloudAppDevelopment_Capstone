@@ -44,8 +44,7 @@ class CarModel(models.Model):
     title = models.CharField(max_length=200, default="title")
     date = models.DateField(null=True)
     def __str__(self):
-        return "Model: " + self.model + "," + \
-               "type: " + self.type
+        return "title: " + self.title 
 
 # <HINT> Create a plain Python class `CarDealer` to hold dealer data
 
