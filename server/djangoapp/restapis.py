@@ -1,9 +1,12 @@
 import requests
 import json
 # import related models here
-from .models import CarDealer
+from .models import CarDealer, DealerReview
 from requests.auth import HTTPBasicAuth
 
+from ibm_watson import NaturalLanguageUnderstandingV1
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+from ibm_watson.natural_language_understanding_v1 import Features, SentimentOptions
 
 # Create a `get_request` to make HTTP GET requests
 # e.g., response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
@@ -26,7 +29,14 @@ def get_request(url, **kwargs):
 
 # Create a `post_request` to make HTTP POST requests
 # e.g., response = requests.post(url, params=kwargs, json=payload)
-
+def post_request(url, json_payload, **kwargs):
+    print(kwargs)
+    try:
+        response = requests.post(url, json=json_payload, params=kwargs)
+    except:
+        print("Network exception occurred")
+    print (response)
+    return response
 
 # Create a get_dealers_from_cf method to get dealers from a cloud function
 # def get_dealers_from_cf(url, **kwargs):
@@ -54,12 +64,55 @@ def get_dealers_from_cf(url, **kwargs):
 # def get_dealer_by_id_from_cf(url, dealerId):
 # - Call get_request() with specified arguments
 # - Parse JSON results into a DealerView object list
-
+def get_dealer_reviews_from_cf(url, dealerId):
+    results = []
+    # Call get_request with a URL parameter
+    json_result = get_request(url, dealerId=dealerId)
+    if json_result:
+        # Get the row list in JSON as dealers
+        reviews = json_result["data"]
+        # For each dealer object
+        for review_doc in reviews:
+            # Create a CarDealer object with values in `doc` object
+            review_obj = DealerReview(name= review_doc["name"],
+                dealership=review_doc["dealership"],
+                review=review_doc["review"], 
+                purchase=review_doc["purchase"], 
+                purchase_date=review_doc["purchase_date"], 
+                car_make=review_doc["car_make"], 
+                car_model=review_doc["car_model"], 
+                car_year=review_doc["car_year"],
+                sentiment="none")
+            review_obj.sentiment = analyze_review_sentiments(review_obj.review)
+            results.append(review_obj)
+    return results
 
 # Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
 # def analyze_review_sentiments(text):
 # - Call get_request() with specified arguments
 # - Get the returned sentiment label such as Positive or Negative
-
+def analyze_review_sentiments(text):
+    api_key = "QNP-Mg4ko-aj9wOQoRsJYYQrwxa7DMv1UmNKqAa7PHnt"
+    url = "https://api.eu-gb.natural-language-understanding.watson.cloud.ibm.com/instances/b2e30442-0772-4f3b-aefc-ec71264e5c04"
+    texttoanalyze= text
+    version = '2020-08-01'
+    authenticator = IAMAuthenticator(api_key)
+    natural_language_understanding = NaturalLanguageUnderstandingV1(
+    version='2020-08-01',
+    authenticator=authenticator
+    )
+    natural_language_understanding.set_service_url(url)
+    response = natural_language_understanding.analyze(
+        text=text,
+        features= Features(sentiment= SentimentOptions())
+    ).get_result()
+    print(json.dumps(response))
+    sentiment_score = str(response["sentiment"]["document"]["score"])
+    sentiment_label = response["sentiment"]["document"]["label"]
+    print(sentiment_score)
+    print(sentiment_label)
+    sentimentresult = sentiment_label
+    
+    return sentimentresult
 
 
