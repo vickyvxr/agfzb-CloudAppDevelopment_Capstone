@@ -25,12 +25,12 @@
                             <th scope="col">City</th>
                             <th scope="col">Address</th>
                             <th scope="col">Zip</th>
-                            <th data-field="state">State</th>
+                            <th data-field="state" data-filter-control="select">State</th>
                             {% if user.is_authenticated %}
                                  <th >Review</th>
                             {% endif %}
                         </tr>
-                    </thead>
+                </thead>
                 <tbody>
                     {% for dealer in dealerships%}
                         <tr>
@@ -44,14 +44,20 @@
                                 <td style="padding: 2%;">
                                     <a href="{% url 'djangoapp:add_review' dealer.id %}">Add review</a>
                                 </td>
-                            {% endif %}
-                            <td>
-                                
-                            </td>
+                            {% else %}
+                                <td>
+                                    
+                                </td>
+                             {% endif %}
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
     </body>
+      <script>
+        $(function() {
+            $('#table').bootstrapTable()
+        })
+    </script>
 
 </html>
