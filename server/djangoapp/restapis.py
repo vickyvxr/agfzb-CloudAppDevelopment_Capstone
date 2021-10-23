@@ -31,11 +31,11 @@ def get_request(url, **kwargs):
 # e.g., response = requests.post(url, params=kwargs, json=payload)
 def post_request(url, json_payload, **kwargs):
     print(kwargs)
+    print(json_payload)
     try:
         response = requests.post(url, json=json_payload, params=kwargs)
     except:
-        print("Network exception occurred")
-    print (response)
+        print("Something went wrong")
     return response
 
 # Create a get_dealers_from_cf method to get dealers from a cloud function
@@ -78,11 +78,13 @@ def get_dealer_reviews_from_cf(url, dealerId):
                 dealership=review_doc["dealership"],
                 review=review_doc["review"], 
                 purchase=review_doc["purchase"], 
-                purchase_date=review_doc["purchase_date"], 
-                car_make=review_doc["car_make"], 
-                car_model=review_doc["car_model"], 
-                car_year=review_doc["car_year"],
                 sentiment="none")
+            if "purchase_date" in review_doc.keys():
+                review_obj.purchase_date= review_doc["purchase_date"]
+                review_obj.car_model= review_doc["car_model"]
+                review_obj.car_year= review_doc["car_year"]
+            if "car_make" in review_doc.keys():
+                review_obj.car_make= review_doc["car_make"] 
             review_obj.sentiment = analyze_review_sentiments(review_obj.review)
             results.append(review_obj)
     return results

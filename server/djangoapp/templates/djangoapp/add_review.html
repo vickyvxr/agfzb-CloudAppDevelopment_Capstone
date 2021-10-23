@@ -20,10 +20,10 @@
                 <h1>Please write your review</h1>
                 <hr>
                 <div class="form-group"> <!--Style second div with .form-group class -->
-                    <label for="username"><b>Did you purchase it?</b></label>
-                    <input type="checkbox" class="form-control" name="purchase" required> <!--Style input with .form-control class -->
-                    <label for="review"><b>Your review</b></label>
-                     <textarea class="form-control" id="review" name="review" rows="2" required></textarea>
+                    <label for="purchase"><b>Did you purchase it?</b></label>
+                    <input type="checkbox" class="form-control" name="purchase"> <!--Style input with .form-control class -->
+                     <label for="purchase_date"><b>When?</b></label>
+                    <input type="date" class="form-control" name="purchase_date" > <!--Style input with .form-control class -->
                     <label for="lastname"><b>Model</b></label>
                     <div class="form-group">
                         <label for="car">Car:</label>
@@ -33,6 +33,11 @@
                             {% endfor %}
                         </select>
                     </div>
+                    <hr/>
+                    
+                    <label for="review"><b>Your review</b></label>
+                     <textarea class="form-control" id="review" name="review" rows="2" required></textarea>
+                    
                     <button class="btn btn-primary" type="submit">Save review</button> <!--Style button with .btn and .btn-primary class -->
                 </div>
             </div>
